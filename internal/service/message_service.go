@@ -20,11 +20,11 @@ type messageSender interface {
 }
 
 type redisClient interface {
-	Set(key, value string) error
+	SetJson(ctx context.Context, key string, val interface{}) error
 }
 
 type messageClient interface {
-	Send(to, content string) (model.MessageResponse, error)
+	Send(to, content string) (model.MessageClientResponse, error)
 }
 
 type MessageService struct {
@@ -79,7 +79,10 @@ func (s *MessageService) processMessages() error {
 			return fmt.Errorf("messageClient.Send error for message: %d, err: %s", msg.Id, err.Error())
 		}
 
-		err = s.redisClient.Set(resp.MessageId, time.Now().String())
+		err = s.redisClient.SetJson(ctx, resp.MessageId, model.MessageRedisPayload{
+			MessageId: resp.MessageId,
+			Timestamp: int(time.Now().Unix()),
+		})
 		if err != nil {
 			return fmt.Errorf("redisClient.Set error for message: %d, err: %s", msg.Id, err.Error())
 		}

@@ -33,14 +33,14 @@ func (mockRepository) Update(ctx context.Context, m *model.Message, updates map[
 
 type mockRedis struct{}
 
-func (mockRedis) Set(key, value string) error {
+func (mockRedis) SetJson(ctx context.Context, key string, val interface{}) error {
 	return nil
 }
 
 type mockMessageClient struct{}
 
-func (mockMessageClient) Send(to, content string) (model.MessageResponse, error) {
-	return model.MessageResponse{Message: "Accepted", MessageId: "123"}, nil
+func (mockMessageClient) Send(to, content string) (model.MessageClientResponse, error) {
+	return model.MessageClientResponse{Message: "Accepted", MessageId: "123"}, nil
 }
 
 func TestNewMessageService(t *testing.T) {
