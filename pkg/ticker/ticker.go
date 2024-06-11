@@ -19,6 +19,7 @@ func NewTimeTicker() *TimeTicker {
 
 func (t *TimeTicker) Start(ctx context.Context, period time.Duration, callback func()) {
 	t.runnning = true
+	t.done = make(chan struct{})
 	t.ticker = time.NewTicker(period)
 
 	for loop := true; loop; {

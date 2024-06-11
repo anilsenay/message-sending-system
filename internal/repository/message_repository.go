@@ -35,6 +35,15 @@ func (r *MessageRepository) RetrieveAll(ctx context.Context, filters model.Messa
 	return data, nil
 }
 
+func (r *MessageRepository) Update(ctx context.Context, model *model.Message, updates map[string]interface{}) error {
+	result := r.db.GetConnection().WithContext(ctx).Clauses(clause.Returning{}).Model(&model).Where(model).Updates(updates)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
+
 func (r *MessageRepository) RetrieveMessagesForProcess(ctx context.Context, limit int) ([]model.Message, error) {
 	var data []model.Message
 	err := r.db.GetConnection().Transaction(func(tx *gorm.DB) error {

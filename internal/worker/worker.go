@@ -2,8 +2,9 @@ package worker
 
 import (
 	"context"
-	"fmt"
 	"time"
+
+	"github.com/rs/zerolog/log"
 )
 
 type ticker interface {
@@ -24,11 +25,15 @@ func NewMessageSender(ticker ticker, period time.Duration) *MessageSender {
 	}
 }
 
-func (ms *MessageSender) Start(ctx context.Context) {
+func (ms *MessageSender) Start(ctx context.Context, processFn func() error) {
 	if ms.ticker.IsRunning() { // prevent calling Start again before Stop
 		return
 	}
-	go ms.ticker.Start(ctx, ms.period, ms.run)
+	go ms.ticker.Start(ctx, ms.period, func() {
+		if err := processFn(); err != nil {
+			log.Error().Msgf("error while processing messages: %s", err.Error())
+		}
+	})
 }
 
 func (ms *MessageSender) Stop() {
@@ -39,9 +44,4 @@ func (ms *MessageSender) Stop() {
 
 func (ms *MessageSender) IsRunning() bool {
 	return ms.ticker.IsRunning()
-}
-
-func (ms *MessageSender) run() {
-	fmt.Println("retrieving 2 messages from db...")
-	fmt.Println("sending messages...")
 }
