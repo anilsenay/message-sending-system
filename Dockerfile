@@ -5,10 +5,10 @@ WORKDIR /app
 COPY go.* ./
 RUN go mod download
 
-COPY *.go ./
+COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /service
+RUN CGO_ENABLED=0 GOOS=linux go build -o service ./cmd/server
 
 EXPOSE 8080
 
-CMD ["/service"]
+CMD ["./service"]

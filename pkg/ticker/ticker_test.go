@@ -26,7 +26,8 @@ func TestTimeTicker(t *testing.T) {
 		})
 
 		time.Sleep(time.Millisecond * 3500)
-		assert.Equal(t, 3, tickCount)
+		// tick -> time ==> 1 -> 0, 2 -> 1000, 3 -> 2000, 4 -> 3000
+		assert.Equal(t, 4, tickCount)
 
 		timeTicker.Stop()
 	})
@@ -65,7 +66,7 @@ func TestTimeTicker_Tick(t *testing.T) {
 	})
 
 	time.Sleep(time.Millisecond * 2500)
-	assert.Equal(t, 2, tickCount)
+	assert.Equal(t, 3, tickCount)
 }
 
 func TestTimeTickerWithContextCancel(t *testing.T) {

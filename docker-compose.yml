@@ -1,19 +1,27 @@
-version: "3.1"
+version: "3"
 
 services:
   message-sending-service:
-    deploy:
-      mode: replicated
-      replicas: 3
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      SERVER_HOST: 0.0.0.0
+      DB_HOST: postgres
+      DB_PORT: 5432
+      REDIS_HOST: redis:6379
+    ports:
+      - 8080:8080
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
-      - mynetwork
+      - message-service-network
 
-  postgres-template:
+  postgres:
     image: postgres:14-alpine
-    container_name: postgres-test
+    container_name: message-sending-service-postgres
     restart: always
     environment:
       POSTGRES_USER: user
@@ -25,16 +33,21 @@ services:
     volumes:
       - ./db.sql:/docker-entrypoint-initdb.d/create_tables.sql
     networks:
-      - mynetwork
+      - message-service-network
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U user -d database'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:latest
+    container_name: message-sending-service-redis
     restart: always
     ports:
       - "6379:6379"
     networks:
-      - mynetwork
+      - message-service-network
 
 networks:
-  mynetwork:
-    driver: bridge
+  message-service-network:
