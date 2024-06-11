@@ -12,6 +12,7 @@ type messageRepository interface {
 	RetrieveAll(ctx context.Context, filters model.Message) ([]model.Message, error)
 	RetrieveMessagesForProcess(ctx context.Context, limit int) ([]model.Message, error)
 	Update(ctx context.Context, model *model.Message, updates map[string]interface{}) error
+	Create(ctx context.Context, model *model.Message) error
 }
 
 type messageSender interface {
@@ -51,17 +52,23 @@ func NewMessageService(
 	}
 }
 
-func (s *MessageService) RetireveUnsentMessages(ctx context.Context) ([]model.Message, error) {
+func (s *MessageService) RetireveSentMessages(ctx context.Context) ([]model.Message, error) {
 	return s.messageRepository.RetrieveAll(ctx, model.Message{
-		Status: model.MESSAGE_UNSENT,
+		Status: model.MESSAGE_SENT,
 	})
+}
+
+func (s *MessageService) CreateMessage(ctx context.Context, m *model.Message) error {
+	m.CreatedAt = time.Now()
+	m.Status = model.MESSAGE_UNSENT
+	return s.messageRepository.Create(ctx, m)
 }
 
 func (s *MessageService) StartMessageSending(ctx context.Context) {
 	s.messageSender.Start(ctx, s.processMessages)
 }
 
-func (s *MessageService) StopMessageSending(ctx context.Context) {
+func (s *MessageService) StopMessageSending() {
 	s.messageSender.Stop()
 }
 

@@ -44,6 +44,15 @@ func (r *MessageRepository) Update(ctx context.Context, model *model.Message, up
 	return nil
 }
 
+func (r *MessageRepository) Create(ctx context.Context, model *model.Message) error {
+	result := r.db.GetConnection().WithContext(ctx).Model(&model).Create(model)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
+
 func (r *MessageRepository) RetrieveMessagesForProcess(ctx context.Context, limit int) ([]model.Message, error) {
 	var data []model.Message
 	err := r.db.GetConnection().Transaction(func(tx *gorm.DB) error {

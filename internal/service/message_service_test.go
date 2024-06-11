@@ -12,22 +12,29 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var msgs = []model.Message{
-	{Id: 1, Status: model.MESSAGE_UNSENT, CreatedAt: time.Now()},
-	{Id: 2, Status: model.MESSAGE_UNSENT, CreatedAt: time.Now()},
-	{Id: 3, Status: model.MESSAGE_UNSENT, CreatedAt: time.Now()},
-}
-
 type mockRepository struct{}
 
 func (mockRepository) RetrieveAll(ctx context.Context, filters model.Message) ([]model.Message, error) {
-	return msgs, nil
+	if filters.Status == model.MESSAGE_SENT {
+		return []model.Message{
+			{Id: 1, Status: model.MESSAGE_SENT, CreatedAt: time.Now()},
+			{Id: 2, Status: model.MESSAGE_SENT, CreatedAt: time.Now()},
+			{Id: 3, Status: model.MESSAGE_SENT, CreatedAt: time.Now()},
+		}, nil
+	}
+	return []model.Message{}, nil
 }
 func (mockRepository) RetrieveMessagesForProcess(ctx context.Context, limit int) ([]model.Message, error) {
-	return msgs[0:2], nil
+	return []model.Message{
+		{Id: 4, Status: model.MESSAGE_UNSENT, CreatedAt: time.Now()},
+		{Id: 5, Status: model.MESSAGE_UNSENT, CreatedAt: time.Now()},
+	}, nil
 }
 func (mockRepository) Update(ctx context.Context, m *model.Message, updates map[string]interface{}) error {
 	m.Status = updates["status"].(model.MessageStatus)
+	return nil
+}
+func (mockRepository) Create(ctx context.Context, m *model.Message) error {
 	return nil
 }
 
@@ -47,10 +54,10 @@ func TestNewMessageService(t *testing.T) {
 	ms := worker.NewMessageSender(ticker.NewTimeTicker(), time.Second)
 	s := service.NewMessageService(mockRepository{}, ms, mockRedis{}, mockMessageClient{}, 2)
 
-	t.Run("1. Retireve Unsent Messages", func(t *testing.T) {
-		messages, err := s.RetireveUnsentMessages(context.Background())
+	t.Run("1. Retireve Sent Messages", func(t *testing.T) {
+		messages, err := s.RetireveSentMessages(context.Background())
 		assert.NoError(t, err)
-		assert.Len(t, messages, len(msgs))
+		assert.Len(t, messages, 3)
 	})
 
 	t.Run("2. Start processing", func(t *testing.T) {
@@ -70,7 +77,7 @@ func TestNewMessageService(t *testing.T) {
 		})
 
 		t.Run("3.2. Stop", func(t *testing.T) {
-			s.StopMessageSending(context.Background())
+			s.StopMessageSending()
 			time.Sleep(1 * time.Second)
 			assert.Equal(t, false, ms.IsRunning())
 		})

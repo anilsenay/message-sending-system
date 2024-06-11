@@ -22,12 +22,28 @@ type MessageClient struct {
 	timeout time.Duration
 }
 
-func NewMessageClient(url string, authKey string, timeout time.Duration) *MessageClient {
-	return &MessageClient{
-		url:     url,
-		authKey: authKey,
-		timeout: timeout,
+type option func(*MessageClient)
+
+func WithTimeout(t time.Duration) option {
+	return func(mc *MessageClient) {
+		mc.timeout = t
 	}
+}
+
+func WithAuthKey(key string) option {
+	return func(mc *MessageClient) {
+		mc.authKey = key
+	}
+}
+
+func NewMessageClient(url string, opts ...option) *MessageClient {
+	mc := &MessageClient{url: url}
+
+	for _, opt := range opts {
+		opt(mc)
+	}
+
+	return mc
 }
 
 func (mc *MessageClient) Send(to, content string) (model.MessageClientResponse, error) {
