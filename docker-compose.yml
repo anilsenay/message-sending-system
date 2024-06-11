@@ -1,0 +1,40 @@
+version: "3.1"
+
+services:
+  message-sending-service:
+    deploy:
+      mode: replicated
+      replicas: 3
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - mynetwork
+
+  postgres-template:
+    image: postgres:14-alpine
+    container_name: postgres-test
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOST_AUTH_METHOD: password
+      POSTGRES_DB: database
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    networks:
+      - mynetwork
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
