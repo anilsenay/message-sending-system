@@ -78,7 +78,7 @@ SwaggerUI can be accessible from [http://localhost:8080/swagger/](http://localho
 
 ---
 
-### Diagrams
+## Diagrams
 
 ![resim](https://github.com/anilsenay/message-sending-system/assets/1047345/63940ed9-a69d-4591-8410-e1fb7cace16d)
 
