@@ -9,6 +9,7 @@ This project is an automated message sending service. The system is designed to 
 - [Getting Started](#getting-started)
 - [Project Layout](#project-layout)
 - [Swagger](#swagger)
+- [Architectural Decisions](#architectural-decisions)
 - [Diagrams](#diagrams)
 
 ---
@@ -65,6 +66,15 @@ I used my own package [swagno](https://github.com/go-swagno/swagno) for Swagger 
 SwaggerUI can be accessible from [http://localhost:8080/swagger/](http://localhost:8080/swagger/)
 
 ![resim](https://github.com/anilsenay/message-sending-system/assets/1047345/1d482dd5-0480-4b50-a835-7cbc040e07da)
+
+---
+
+### Architectural Decisions
+
+- Message Service could be 2 seperate applications, one of which is just an API and the other is just a cron job. But I decided to make them as same application for simplicity of start/stop functionality.
+- I used PostgreSQL to benefit from its atomicity and locking mechanisms. But, since there was no relationship, a non-relational database could be used.
+- To prevent different instances from processing the same records when scaling the application, I used PostgreSQL's locking mechanism while retrieving messages from DB. While retrieving messages to process, it locks records and update their status as `processing`, so other instances could not retrieve same messages.
+- Because it depends on business needs, I did not implement any retry mechanism for failures(may result in sending duplicate messages etc.). I just decided to change the status of the message to `failed` in DB.
 
 ---
 
