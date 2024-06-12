@@ -15,9 +15,8 @@ type FailureResponse struct {
 }
 
 type FailDetails struct {
-	Message    string `json:"msg"`
-	Reason     string `json:"reason"`
-	CustomCode int    `json:"code,omitempty"`
+	Message string `json:"msg"`
+	Reason  string `json:"reason"`
 }
 
 func handleError(c *fiber.Ctx, statusCode int, message, reason string) error {
@@ -31,9 +30,8 @@ func handleError(c *fiber.Ctx, statusCode int, message, reason string) error {
 }
 
 func handleSuccess(c *fiber.Ctx, statusCode int, data interface{}) error {
-	a := SuccessResponse{
+	return c.Status(statusCode).JSON(SuccessResponse{
 		Status:  statusCode,
 		Success: data,
-	}
-	return c.Status(statusCode).JSON(a)
+	})
 }
