@@ -47,7 +47,7 @@ func TestMain(m *testing.M) {
 	redisUrl, _ := redisContainer.ConnectionString(context.Background())
 	redisClient := client.NewRedis(redis.NewClient(&redis.Options{Addr: strings.ReplaceAll(redisUrl, "redis://", "")}))
 
-	messageClient := client.NewMessageClient("https://webhook.site/e72753b5-938a-4957-a12c-2c4f8b8c009c")
+	messageClient := client.NewMessageClient("https://webhook.site/da02ccdc-d02d-4a41-89ac-4938daca524e")
 
 	msender := worker.NewMessageSender(ticker.NewTimeTicker(), 5*time.Second)
 

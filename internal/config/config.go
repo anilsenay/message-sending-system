@@ -36,5 +36,5 @@ var REDIS_HOST = config.GetEnv("REDIS_HOST", "localhost:6379")
 var REDIS_DB = config.GetEnvInt("REDIS_DB", 0)
 
 // webhook
-var WEBHOOK_URL = config.GetEnv("WEBHOOK_URL", "https://webhook.site/e72753b5-938a-4957-a12c-2c4f8b8c009c")
+var WEBHOOK_URL = config.GetEnv("WEBHOOK_URL", "https://webhook.site/da02ccdc-d02d-4a41-89ac-4938daca524e")
 var WEBHOOK_AUTH_KEY = config.GetEnv("WEBHOOK_AUTH_KEY", "")
