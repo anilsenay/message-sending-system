@@ -10,7 +10,6 @@ import (
 	"github.com/anilsenay/message-sending-system/internal/model"
 	"github.com/anilsenay/message-sending-system/internal/repository"
 	"github.com/stretchr/testify/assert"
-	"gorm.io/gorm/logger"
 )
 
 func TestMessageRepository_GetMessagesForProcess(t *testing.T) {
@@ -40,7 +39,6 @@ func TestMessageRepository_GetMessagesForProcess(t *testing.T) {
 		assert.Len(t, messages, len(created))
 	})
 
-	dockerDatabase.Db.Logger = logger.Default.LogMode(logger.Info)
 	t.Run("3. Retrieve messages for processing", func(t *testing.T) {
 		messages, err := repo.RetrieveMessagesForProcess(context.Background(), numOfMessagesToProcess)
 		assert.NoError(t, err)
