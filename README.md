@@ -38,6 +38,12 @@ docker-compose up --build
 
 3. Visit [http://localhost:8080/swagger/](http://localhost:8080/swagger/)
 
+### Configuration
+
+Application's default configs placed in [`/internal/config/config.go`](https://github.com/anilsenay/message-sending-system/blob/master/internal/config/config.go)
+
+I like my own config package instead of using config packages such as `dotenv`.
+
 ---
 
 ## Project Layout
