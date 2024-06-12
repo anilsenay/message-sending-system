@@ -14,8 +14,8 @@ import (
 
 type mockRepository struct{}
 
-func (mockRepository) RetrieveAll(ctx context.Context, filters model.Message) ([]model.Message, error) {
-	if filters.Status == model.MESSAGE_SENT {
+func (mockRepository) RetrieveAll(ctx context.Context, filters model.DbFilters[model.Message]) ([]model.Message, error) {
+	if filters.Model.Status == model.MESSAGE_SENT {
 		return []model.Message{
 			{Id: 1, Status: model.MESSAGE_SENT, CreatedAt: time.Now()},
 			{Id: 2, Status: model.MESSAGE_SENT, CreatedAt: time.Now()},

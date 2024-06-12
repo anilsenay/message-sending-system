@@ -23,9 +23,22 @@ func NewMessageRepository(db db) *MessageRepository {
 	}
 }
 
-func (r *MessageRepository) RetrieveAll(ctx context.Context, filters model.Message) ([]model.Message, error) {
+func (r *MessageRepository) RetrieveAll(ctx context.Context, filters model.DbFilters[model.Message]) ([]model.Message, error) {
 	var data []model.Message
-	result := r.db.GetConnection().WithContext(ctx).Model(&model.Message{}).Where(filters)
+	result := r.db.GetConnection().WithContext(ctx).Model(&model.Message{})
+
+	if filters.Model != nil {
+		result = result.Where(*filters.Model)
+	}
+	if filters.Limit != nil {
+		result = result.Limit(*filters.Limit)
+	}
+	if filters.Offset != nil {
+		result = result.Offset(*filters.Offset)
+	}
+	if filters.Order != nil {
+		result = result.Order(*filters.Order)
+	}
 
 	result = result.Find(&data)
 	if result.Error != nil {
@@ -59,7 +72,7 @@ func (r *MessageRepository) RetrieveMessagesForProcess(ctx context.Context, limi
 		result := tx.
 			WithContext(ctx).
 			Model(&model.Message{}).
-			Clauses(clause.Locking{Strength: "UPDATE"}).
+			Clauses(clause.Locking{Strength: "UPDATE", Options: "SKIP LOCKED"}).
 			Where(model.Message{Status: model.MESSAGE_UNSENT}).
 			Limit(limit).
 			Order("created_at ASC").

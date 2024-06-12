@@ -12,6 +12,7 @@ const (
 	MESSAGE_UNSENT     MessageStatus = "unsent"
 	MESSAGE_PROCESSING MessageStatus = "processing"
 	MESSAGE_SENT       MessageStatus = "sent"
+	MESSAGE_FAILED     MessageStatus = "failed"
 )
 
 type Message struct {

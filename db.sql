@@ -1,4 +1,4 @@
-CREATE TYPE message_status as enum ('unsent', 'processing', 'sent');
+CREATE TYPE message_status as enum ('unsent', 'processing', 'sent', 'failed');
 
 CREATE TABLE message (
   id BIGSERIAL CONSTRAINT message_pk PRIMARY KEY,
