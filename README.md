@@ -69,7 +69,7 @@ SwaggerUI can be accessible from [http://localhost:8080/swagger/](http://localho
 
 ---
 
-### Architectural Decisions
+## Architectural Decisions
 
 - Message Service could be 2 seperate applications, one of which is just an API and the other is just a cron job. But I decided to make them as same application for simplicity of start/stop functionality.
 - I used PostgreSQL to benefit from its atomicity and locking mechanisms. But, since there was no relationship, a non-relational database could be used.
