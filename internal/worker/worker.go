@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/rs/zerolog/log"
+	"github.com/anilsenay/message-sending-system/pkg/logger"
 )
 
 type ticker interface {
@@ -31,7 +31,7 @@ func (ms *MessageSender) Start(ctx context.Context, processFn func() error) {
 	}
 	go ms.ticker.Start(ctx, ms.period, func() {
 		if err := processFn(); err != nil {
-			log.Error().Msgf("error while processing messages: %s", err.Error())
+			logger.Error().Msgf("error while processing messages: %s", err.Error())
 		}
 	})
 }

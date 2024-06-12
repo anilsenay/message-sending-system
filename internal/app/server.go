@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/anilsenay/message-sending-system/internal/config"
+	"github.com/anilsenay/message-sending-system/pkg/logger"
 	"github.com/anilsenay/message-sending-system/pkg/rest"
-	"github.com/rs/zerolog"
 )
 
 type Server struct {
@@ -13,7 +13,7 @@ type Server struct {
 }
 
 func NewServer(ctx context.Context) *Server {
-	setLogLevel(config.LOG_LEVEL)
+	logger.SetLogLevel(config.LOG_LEVEL)
 
 	restApp := rest.NewRest(rest.Config{
 		AppName:          config.APP_NAME,
@@ -46,21 +46,4 @@ func (s *Server) Listen() error {
 
 func (s *Server) Stop() {
 	s.restApp.Stop()
-}
-
-func setLogLevel(level string) {
-	switch level {
-	case "ERROR":
-		zerolog.SetGlobalLevel(zerolog.ErrorLevel)
-	case "INFO":
-		zerolog.SetGlobalLevel(zerolog.InfoLevel)
-	case "WARN":
-		zerolog.SetGlobalLevel(zerolog.WarnLevel)
-	case "DEBUG":
-		zerolog.SetGlobalLevel(zerolog.DebugLevel)
-	case "DISABLED":
-		zerolog.SetGlobalLevel(zerolog.Disabled)
-	default:
-		zerolog.SetGlobalLevel(zerolog.DebugLevel)
-	}
 }

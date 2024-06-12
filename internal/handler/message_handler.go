@@ -4,11 +4,11 @@ import (
 	"context"
 
 	"github.com/anilsenay/message-sending-system/internal/model"
+	"github.com/anilsenay/message-sending-system/pkg/logger"
 	"github.com/go-swagno/swagno/components/endpoint"
 	"github.com/go-swagno/swagno/components/http/response"
 	"github.com/go-swagno/swagno/components/parameter"
 	"github.com/gofiber/fiber/v2"
-	"github.com/rs/zerolog/log"
 )
 
 type messageService interface {
@@ -31,7 +31,7 @@ func NewMessageHandler(messageService messageService) *MessageHandler {
 func (h *MessageHandler) handleGetSentMessages(ctx *fiber.Ctx) error {
 	messages, err := h.messageService.RetireveSentMessages(ctx.UserContext())
 	if err != nil {
-		log.Error().Str("url", ctx.BaseURL()).Msgf("error while getting sent messages: %s", err.Error())
+		logger.Error().Str("url", ctx.BaseURL()).Msgf("error while getting sent messages: %s", err.Error())
 		return handleError(ctx, fiber.StatusInternalServerError, "Some error occurred", err.Error())
 	}
 

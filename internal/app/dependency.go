@@ -26,7 +26,7 @@ var db = orm.NewDatabase(orm.DatabaseConfig{
 })
 
 var redisClient = client.NewRedis(
-	redis.NewClient(&redis.Options{Addr: config.REDIS_HOST}),
+	redis.NewClient(&redis.Options{Addr: config.REDIS_HOST, DB: config.REDIS_DB}),
 )
 
 var messageClient = client.NewMessageClient(config.WEBHOOK_URL, client.WithAuthKey(config.WEBHOOK_AUTH_KEY))

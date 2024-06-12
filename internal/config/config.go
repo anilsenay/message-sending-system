@@ -33,6 +33,7 @@ var DB_POOL_HEALTH_CHECK_PERIOD = config.GetEnvDuration("DB_POOL_HEALTH_CHECK_PE
 
 // redis
 var REDIS_HOST = config.GetEnv("REDIS_HOST", "localhost:6379")
+var REDIS_DB = config.GetEnvInt("REDIS_DB", 0)
 
 // webhook
 var WEBHOOK_URL = config.GetEnv("WEBHOOK_URL", "https://webhook.site/9084ab6a-4827-45ce-b8fc-1fa50f3cbf10")

@@ -4,12 +4,12 @@ import (
 	"fmt"
 
 	"github.com/anilsenay/message-sending-system/pkg/graceful"
+	"github.com/anilsenay/message-sending-system/pkg/logger"
 	"github.com/go-swagno/swagno"
 	"github.com/go-swagno/swagno-fiber/swagger"
 	"github.com/go-swagno/swagno/components/endpoint"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/rs/zerolog/log"
 )
 
 type Rest struct {
@@ -36,7 +36,7 @@ func NewRest(cfg Config) *Rest {
 	app.Use(recover.New(recover.Config{
 		EnableStackTrace: true,
 		StackTraceHandler: func(c *fiber.Ctx, e interface{}) {
-			log.Error().Str("url", c.OriginalURL()).Msgf("%v", e)
+			logger.Error().Str("url", c.OriginalURL()).Msgf("%v", e)
 		},
 	}))
 
@@ -63,14 +63,14 @@ func (s *Rest) Listen() error {
 	// start http listener
 	graceful.OnShutdown(s.Stop)
 
-	log.Log().Msgf("App starting on http://%s:%d", s.config.Host, s.config.Port)
+	logger.Log().Msgf("App starting on http://%s:%d", s.config.Host, s.config.Port)
 	err := s.app.Listen(fmt.Sprintf("%s:%d", s.config.Host, s.config.Port))
 	if err != nil {
-		log.Panic().Msgf("Error on Listen: %s", err.Error())
+		logger.Panic().Msgf("Error on Listen: %s", err.Error())
 		return err
 	}
 	graceful.Shutdown()
-	log.Log().Msg("App stopped")
+	logger.Log().Msg("App stopped")
 	return nil
 }
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/rs/zerolog/log"
+	"github.com/anilsenay/message-sending-system/pkg/logger"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -44,12 +44,12 @@ func NewDatabase(config DatabaseConfig) *Database {
 		Logger: getLogger(config.LogLevel),
 	})
 	if err != nil {
-		log.Panic().Msgf("Failed to connect database: %s", err.Error())
+		logger.Panic().Msgf("Failed to connect database: %s", err.Error())
 	}
 
 	sqlDB, err := db.DB()
 	if err != nil {
-		log.Panic().Msgf("Failed to connect database: %s", err.Error())
+		logger.Panic().Msgf("Failed to connect database: %s", err.Error())
 	}
 
 	if config.MaxConnLifeTime != 0 {
@@ -84,7 +84,7 @@ func (d *Database) Ping() error {
 func (d *Database) Close() {
 	sqlDB, err := d.Db.DB()
 	if err != nil {
-		log.Panic().Msgf("Failed to connect database: %s", err.Error())
+		logger.Panic().Msgf("Failed to connect database: %s", err.Error())
 	}
 	sqlDB.Close()
 }

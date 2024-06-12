@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/anilsenay/message-sending-system/internal/model"
-	"github.com/rs/zerolog/log"
+	"github.com/anilsenay/message-sending-system/pkg/logger"
 )
 
 type messageRepository interface {
@@ -81,7 +81,7 @@ func (s *MessageService) processMessages() error {
 		return fmt.Errorf("RetrieveMessagesForProcess error: %s", err.Error())
 	}
 
-	log.Info().Msgf("%d messages found", len(messages))
+	logger.Info().Msgf("%d messages found", len(messages))
 
 	for _, msg := range messages {
 		resp, err := s.messageClient.Send(msg.RecipientPhoneNumber, msg.Content)

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rs/zerolog/log"
+	"github.com/anilsenay/message-sending-system/pkg/logger"
 )
 
 func GetEnv(key, fallback string) string {
@@ -120,7 +120,7 @@ func GetEnvIntList(key, delimeter, fallback string) []int {
 		itemWithoutSpaces := strings.Trim(item, " ")
 		itemAsInt, err := strconv.Atoi(itemWithoutSpaces)
 		if err != nil {
-			log.Panic().Msg("Invalid integer list element in environment variable")
+			logger.Panic().Msg("Invalid integer list element in environment variable")
 		}
 		list = append(list, itemAsInt)
 	}
@@ -142,7 +142,7 @@ func GetEnvIntPtrList(key, delimeter, fallback string) []*int {
 		itemWithoutSpaces := strings.Trim(item, " ")
 		itemAsInt, err := strconv.Atoi(itemWithoutSpaces)
 		if err != nil {
-			log.Panic().Msg("Invalid integer list element in environment variable")
+			logger.Panic().Msg("Invalid integer list element in environment variable")
 		}
 		list = append(list, &itemAsInt)
 	}
