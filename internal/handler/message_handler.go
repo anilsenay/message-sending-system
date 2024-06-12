@@ -56,6 +56,7 @@ func (h *MessageHandler) handleCreateMessage(ctx *fiber.Ctx) error {
 
 	err := h.messageService.CreateMessage(ctx.UserContext(), &message)
 	if err != nil {
+		logger.Error().Str("url", ctx.BaseURL()).Msgf("error while creating message: %s", err.Error())
 		return handleError(ctx, fiber.StatusBadRequest, "error while creating message", err.Error())
 	}
 

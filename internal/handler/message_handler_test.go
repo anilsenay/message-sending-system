@@ -53,6 +53,7 @@ func TestNewMessageHandler(t *testing.T) {
 		assert.Empty(t, fail)
 		assert.NotEmpty(t, resp)
 		assert.Len(t, resp, messageCount)
+		assert.NotEmpty(t, resp[0].SentAt)
 	})
 
 	t.Run("6. Stop worker", func(t *testing.T) {

@@ -80,5 +80,9 @@ func (mc *MessageClient) Send(to, content string) (model.MessageClientResponse, 
 		return model.MessageClientResponse{}, fmt.Errorf("could not unmarshal response body: %s", err)
 	}
 
+	if messageResponse.MessageId == "" {
+		return model.MessageClientResponse{}, fmt.Errorf("messageId could not received")
+	}
+
 	return messageResponse, nil
 }

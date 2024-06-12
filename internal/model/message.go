@@ -20,6 +20,7 @@ type Message struct {
 	RecipientPhoneNumber string        `gorm:"column:recipient_phone_number" json:"recipient_phone_number"`
 	Status               MessageStatus `gorm:"column:status" json:"status"`
 	CreatedAt            time.Time     `gorm:"column:created_at" json:"created_at"`
+	SentAt               *time.Time    `gorm:"column:sent_at" json:"sent_at"`
 }
 
 func (Message) TableName() string {

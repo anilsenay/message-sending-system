@@ -60,7 +60,6 @@ func NewRest(cfg Config) *Rest {
 }
 
 func (s *Rest) Listen() error {
-	// start http listener
 	graceful.OnShutdown(s.Stop)
 
 	logger.Log().Msgf("App starting on http://%s:%d", s.config.Host, s.config.Port)

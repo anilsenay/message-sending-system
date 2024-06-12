@@ -30,6 +30,8 @@ var dockerDatabase *orm.Database
 
 var messageHandler *handler.MessageHandler
 
+var messageCountPerProcess = 5
+
 func TestMain(m *testing.M) {
 	dockerDatabase = orm.NewDockerDatabase(orm.DockerDatabaseConfig{
 		MigrationQueryPath: "../../db.sql",
@@ -45,12 +47,12 @@ func TestMain(m *testing.M) {
 	redisUrl, _ := redisContainer.ConnectionString(context.Background())
 	redisClient := client.NewRedis(redis.NewClient(&redis.Options{Addr: strings.ReplaceAll(redisUrl, "redis://", "")}))
 
-	messageClient := client.NewMessageClient("https://webhook.site/9084ab6a-4827-45ce-b8fc-1fa50f3cbf10")
+	messageClient := client.NewMessageClient("https://webhook.site/e72753b5-938a-4957-a12c-2c4f8b8c009c")
 
 	msender := worker.NewMessageSender(ticker.NewTimeTicker(), 5*time.Second)
 
 	messageRepo := repository.NewMessageRepository(dockerDatabase)
-	messageService := service.NewMessageService(messageRepo, msender, redisClient, messageClient, 5)
+	messageService := service.NewMessageService(messageRepo, msender, redisClient, messageClient, messageCountPerProcess)
 	messageHandler = handler.NewMessageHandler(messageService)
 
 	os.Exit(m.Run())

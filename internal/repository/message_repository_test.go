@@ -2,13 +2,13 @@ package repository_test
 
 import (
 	"context"
+	"fmt"
 	"testing"
 	"time"
 
 	"github.com/anilsenay/message-sending-system/internal/model"
 	"github.com/anilsenay/message-sending-system/internal/repository"
 	"github.com/stretchr/testify/assert"
-	"gorm.io/gorm/logger"
 )
 
 func TestMessageRepository_GetMessagesForProcess(t *testing.T) {
@@ -19,7 +19,7 @@ func TestMessageRepository_GetMessagesForProcess(t *testing.T) {
 	t.Run("1. Create some messages", func(t *testing.T) {
 		for i := 0; i < 10; i++ {
 			message := model.Message{
-				Content:              "content",
+				Content:              fmt.Sprintf("content-%d", i),
 				RecipientPhoneNumber: "+90111111111",
 				Status:               model.MESSAGE_UNSENT,
 				CreatedAt:            time.Now().Add(time.Duration(i+1) * time.Second),
@@ -38,12 +38,12 @@ func TestMessageRepository_GetMessagesForProcess(t *testing.T) {
 		assert.Len(t, messages, len(created))
 	})
 
-	dockerDatabase.Db.Logger = logger.Default.LogMode(logger.Info)
 	t.Run("3. Retrieve messages for processing", func(t *testing.T) {
 		messages, err := repo.RetrieveMessagesForProcess(context.Background(), numOfMessagesToProcess)
 		assert.NoError(t, err)
 		assert.Len(t, messages, numOfMessagesToProcess)
 		assert.Equal(t, model.MESSAGE_PROCESSING, messages[0].Status)
+		assert.Equal(t, "content-0", messages[0].Content)
 	})
 
 	t.Run("4. Get all unsent messages", func(t *testing.T) {

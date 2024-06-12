@@ -88,19 +88,25 @@ func (s *MessageService) processMessages() error {
 		if err != nil {
 			return fmt.Errorf("messageClient.Send error for message: %d, err: %s", msg.Id, err.Error())
 		}
+		sentDate := time.Now()
 
 		err = s.redisClient.SetJson(ctx, resp.MessageId, model.MessageRedisPayload{
 			MessageId: resp.MessageId,
-			Timestamp: int(time.Now().Unix()),
+			Timestamp: int(sentDate.Unix()),
 		})
 		if err != nil {
 			return fmt.Errorf("redisClient.Set error for message: %d, err: %s", msg.Id, err.Error())
 		}
 
-		err = s.messageRepository.Update(ctx, &msg, map[string]interface{}{"status": model.MESSAGE_SENT})
+		err = s.messageRepository.Update(ctx, &msg, map[string]interface{}{
+			"status":  model.MESSAGE_SENT,
+			"sent_at": sentDate,
+		})
 		if err != nil {
 			return fmt.Errorf("messageRepository.Update error for message: %d, err: %s", msg.Id, err.Error())
 		}
+
+		logger.Debug().Msgf("message with response uuid: %s processed", resp.MessageId)
 	}
 
 	return nil

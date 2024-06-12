@@ -5,5 +5,6 @@ CREATE TABLE message (
   content VARCHAR(1000) NOT NULL,
   recipient_phone_number VARCHAR(20) NOT NULL,
   status message_status NOT NULL DEFAULT 'unsent' :: message_status,
-  created_at TIMESTAMP DEFAULT NOW() NOT NULL
+  created_at TIMESTAMP DEFAULT NOW() NOT NULL,
+  sent_at TIMESTAMP
 );

@@ -8,7 +8,7 @@ import (
 )
 
 func TestNewMessageClient(t *testing.T) {
-	url := "https://webhook.site/9084ab6a-4827-45ce-b8fc-1fa50f3cbf10"
+	url := "https://webhook.site/e72753b5-938a-4957-a12c-2c4f8b8c009c"
 	c := client.NewMessageClient(url)
 	resp, err := c.Send("+901111111111", "deneme")
 	assert.NoError(t, err)
