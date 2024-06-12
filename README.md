@@ -8,7 +8,8 @@ This project is an automated message sending service. The system is designed to 
 
 - [Getting Started](#getting-started)
 - [Project Layout](#project-layout)
-- [Swagger](#markdown-header-swagger)
+- [Swagger](#swagger)
+- [Diagrams](#diagrams)
 
 ---
 
@@ -62,3 +63,13 @@ docker-compose up --build
 
 I used my own package [swagno](https://github.com/go-swagno/swagno) for Swagger documentation.
 SwaggerUI can be accessible from [http://localhost:8080/swagger/](http://localhost:8080/swagger/)
+
+![resim](https://github.com/anilsenay/message-sending-system/assets/1047345/1d482dd5-0480-4b50-a835-7cbc040e07da)
+
+---
+
+### Diagrams
+
+![resim](https://github.com/anilsenay/message-sending-system/assets/1047345/63940ed9-a69d-4591-8410-e1fb7cace16d)
+
+![resim](https://github.com/anilsenay/message-sending-system/assets/1047345/a073ef2c-9ea5-47cc-a91e-5b830016306b)
