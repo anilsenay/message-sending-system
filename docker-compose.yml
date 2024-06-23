@@ -10,7 +10,7 @@ services:
       DB_HOST: postgres
       DB_PORT: 5432
       REDIS_HOST: redis:6379
-      WEBHOOK_URL: https://webhook.site/1b90db97-eb86-436f-bc62-0665dc34c553
+      WEBHOOK_URL: https://webhook.site/655d89ba-ac53-40a9-b9d0-2adf9f11775c
     ports:
       - 8080:8080
     restart: on-failure
